@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import socket
 import sys
 import operator
@@ -12,23 +10,6 @@ operators = {
 }
 
 
-def eval_expression(tokens, stack):
-    for token in tokens:
-        if set(token).issubset(set("0123456789.")):
-            stack.append(float(token))
-        elif token in operators:
-            if len(stack) < 2:
-                raise ValueError('Must have two parameters.')
-            a = stack.pop()
-            b = stack.pop()
-            op = operators[token]
-            stack.append(op(b, a))
-        else:
-            raise ValueError("WTF? %s" % token)
-        print(token)
-    return stack
-
-
 def Main():
 
     # Getting host and port address.
@@ -37,8 +18,6 @@ def Main():
     # 13001 : port address
     # 246 549 + : problem
 
-    arguments = sys.argv
-
     host = ''
     port = 13001
 
@@ -46,10 +25,10 @@ def Main():
         port = int(port)
         # rpn_statement = str(rpn_statement)
     except ValueError as verr:
-        print("Not a valid arguments; Check your host and port address as well as RPN statement")
+        print("Incorrect RPN Statement")
         sys.exit(0)
     except Exception as ex:
-        print("Not a valid arguments; Check your host and port address as well as RPN statement")
+        print("Incorrect RPN Statement")
         sys.exit(0)
 
     my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -62,19 +41,18 @@ def Main():
         data = connection.recv(1024).decode('utf-8')
         if not data:
             break
-        print("From connected server: "+data)
+        print("Operation: "+data)
 
-        # RPN Calculation Algorithm starts where
-        stack = []
-        # while True:
-        expression = data
-        if len(expression) == 0:
+        if len(data) == 0:
             continue
-        stack = eval_expression(expression.split(), stack)
-        data = str(int(stack[0]))
+
+        # Compute a single operation which was sent from the client
+        left_operand, right_operand, operator = data.split()
+        result = operators[operator](int(left_operand), int(right_operand))
+
         # end of RPN calculation
-        print("sending: "+data)
-        connection.send(data.encode("utf-8"))
+        print("Result: "+str(int(result)))
+        connection.send(str(result).encode("utf-8"))
 
     connection.close()
 

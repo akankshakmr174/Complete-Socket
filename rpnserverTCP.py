@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import socket
 import sys
 import operator
@@ -23,6 +25,7 @@ def eval_expression(tokens, stack):
             stack.append(op(b, a))
         else:
             raise ValueError("WTF? %s" % token)
+        print(token)
     return stack
 
 
@@ -36,9 +39,8 @@ def Main():
 
     arguments = sys.argv
 
-    host =  '127.0.0.1' # arguments[1]
-    port = 13001 # arguments[2]
-    #rpn_statement = arguments[3]
+    host = ''
+    port = 13001
 
     try:
         port = int(port)
@@ -52,7 +54,7 @@ def Main():
 
     my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     my_socket.bind((host, port))
-    my_socket.listen()
+    my_socket.listen(5)
     connection, addr = my_socket.accept()
     print("Connection From " + str(addr))
 
@@ -66,17 +68,12 @@ def Main():
         stack = []
         # while True:
         expression = data
-        if expression in ['quit', 'q', 'exit']:
-            exit()
-        elif expression in ['clear', 'empty']:
-            stack = []
-            continue
-        elif len(expression) == 0:
+        if len(expression) == 0:
             continue
         stack = eval_expression(expression.split(), stack)
-        data = str(stack[0])
+        data = str(int(stack[0]))
         # end of RPN calculation
-        print("sending"+data)
+        print("sending: "+data)
         connection.send(data.encode("utf-8"))
 
     connection.close()

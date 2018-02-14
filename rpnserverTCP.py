@@ -33,26 +33,25 @@ if __name__ == '__main__':
             # Requirement: Limit the number of input "tokens"
             if len(tokens) == 3:
                 left_operand, right_operand, operator = data.split()
+                if operator in operators:
+                    # If the operands are not number,
+                    try:
+                        left_operand = int(left_operand)
+                        right_operand = int(right_operand)
+                    except ValueError:
+                        print('One or more operands are not numbers')
+                        break
+                    # Compute the single operation which was sent from the client
+                    result = operators[operator](left_operand, right_operand)
+                    # end of RPN calculation
+                    # Requirment 3)
+                    # Have the server return the answer to the client
+                    # i.e) Result: 120 //single output.
+                    print("Result: "+str(int(result)))
+                    connection.send(str(result).encode("utf-8"))
+                else:
+                    print("The operator is unknown or can't be a number")
             else:
                 print("Requires only three tokens for a single operation")
-
-            if operator in operators:
-                # If the operands are not number,
-                try:
-                    left_operand = int(left_operand)
-                    right_operand = int(right_operand)
-                except ValueError:
-                    print('One or more operands are not numbers')
-                    break
-                # Compute the single operation which was sent from the client
-                result = operators[operator](left_operand, right_operand)
-                # end of RPN calculation
-                # Requirment 3)
-                # Have the server return the answer to the client
-                # i.e) Result: 120 //single output.
-                print("Result: "+str(int(result)))
-                connection.send(str(result).encode("utf-8"))
-            else:
-                print("The operator is unknown or can't be a number")
 
         connection.close()

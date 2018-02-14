@@ -56,7 +56,7 @@ if __name__ == '__main__':
             b = stack.pop()  # left operand
 
             # Requirement 2)
-            # Have the client transmit the expression to a server_socket
+            # Have the client transmit the expression to a server
             # where the computation will be performed.
             # -> The expression is a single operation
             operation = ""+str(int(b))+" "+str(int(a))+" "+str(token)
@@ -77,7 +77,7 @@ if __name__ == '__main__':
         # Have the client print the answer to the screen
         print(stack[0])
     else:
-        print("Incomplete RPN statement")
+        print("The RPN calculation is not finished")
 
     # close the socket
     client_socket.close()

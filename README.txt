@@ -22,7 +22,7 @@ example how the http message format is described),
 => Client 에서 Parsing후에 Server에서 single computation. Client에서 더해서 결과냄.
 
 3) How TCP server knows that expression is complete
-=> when they don't get the data anymore.
+=> When the server doesn't get the data anymore.
 
 4) anything else you implemented
 => UDP timeout. Single support. timeout, ~~.

@@ -1,7 +1,7 @@
 import socket
 
 
-def Main():
+if __name__ == '__main__':
     host = "127.0.0.1"
     port = 5000
 
@@ -29,7 +29,3 @@ def Main():
 
     # Close the Socket
     server_socket.close()
-
-
-if __name__ == "__main__":
-    Main()

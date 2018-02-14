@@ -1,7 +1,8 @@
 import socket
-import sys
 import operator
 
+
+# Supporting addition, subtraction, multiplication and division.
 operators = {
     '+': operator.add,
     '-': operator.sub,
@@ -10,52 +11,39 @@ operators = {
 }
 
 
-def Main():
-
-    # Getting host and port address.
-    # ex) rpncalc 127.0.0.1 13001 "246 549 +" where,
-    # 127.0.0.1 : host address
-    # 13001 : port address
-    # 246 549 + : problem
-
+if __name__ == '__main__':
+    """This is main server."""
     host = ''
     port = 13001
 
-    try:
-        port = int(port)
-        # rpn_statement = str(rpn_statement)
-    except ValueError as verr:
-        print("Incorrect RPN Statement")
-        sys.exit(0)
-    except Exception as ex:
-        print("Incorrect RPN Statement")
-        sys.exit(0)
-
-    my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    my_socket.bind((host, port))
-    my_socket.listen(5)
-    connection, addr = my_socket.accept()
-    print("Connection From " + str(addr))
-
     while True:
-        data = connection.recv(1024).decode('utf-8')
-        if not data:
-            break
-        print("Operation: "+data)
+        my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        my_socket.bind((host, port))
+        my_socket.listen(1)
+        connection, addr = my_socket.accept()
+        print("Connection From " + str(addr))
 
-        if len(data) == 0:
-            continue
+        while True:
+            # buffer size 1024
+            data = connection.recv(1024).decode('utf-8')
+            if not data:
+                break
+            print("Operation: "+data)
 
-        # Compute a single operation which was sent from the client
-        left_operand, right_operand, operator = data.split()
-        result = operators[operator](int(left_operand), int(right_operand))
+            tokens = data.split()
+            # Requirement: Limit the number of input "tokens"
+            if len(tokens) == 3:
+                left_operand, right_operand, operator = data.split()
+            else:
+                print("Requires only three tokens for a single operation")
 
-        # end of RPN calculation
-        print("Result: "+str(int(result)))
-        connection.send(str(result).encode("utf-8"))
+            # Compute the single operation which was sent from the client
+            result = operators[operator](int(left_operand), int(right_operand))
 
-    connection.close()
+            # end of RPN calculation
+            # Requirment 3)
+            # Have the server return the answer to the client
+            print("Result: "+str(int(result)))
+            connection.send(str(result).encode("utf-8"))
 
-
-if __name__ == '__main__':
-    Main()
+        connection.close()

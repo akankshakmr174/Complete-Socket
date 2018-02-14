@@ -2,7 +2,7 @@ import socket
 import sys
 
 
-def Main():
+if __name__ == '__main__':
     arguments = sys.argv
 
     host = arguments[1]
@@ -42,7 +42,3 @@ def Main():
             print("Error Occured")
 
     client_socket.close()
-
-
-if __name__ == "__main__":
-    Main()

@@ -12,7 +12,6 @@ operators = {
 
 
 if __name__ == '__main__':
-    """This is main server."""
     host = ''
     port = 13001
 
@@ -37,13 +36,23 @@ if __name__ == '__main__':
             else:
                 print("Requires only three tokens for a single operation")
 
-            # Compute the single operation which was sent from the client
-            result = operators[operator](int(left_operand), int(right_operand))
-
-            # end of RPN calculation
-            # Requirment 3)
-            # Have the server return the answer to the client
-            print("Result: "+str(int(result)))
-            connection.send(str(result).encode("utf-8"))
+            if operator in operators:
+                # If the operands are not number,
+                try:
+                    left_operand = int(left_operand)
+                    right_operand = int(right_operand)
+                except ValueError:
+                    print('One or more operands are not numbers')
+                    break
+                # Compute the single operation which was sent from the client
+                result = operators[operator](left_operand, right_operand)
+                # end of RPN calculation
+                # Requirment 3)
+                # Have the server return the answer to the client
+                # i.e) Result: 120 //single output.
+                print("Result: "+str(int(result)))
+                connection.send(str(result).encode("utf-8"))
+            else:
+                print("The operator is unknown or can't be a number")
 
         connection.close()

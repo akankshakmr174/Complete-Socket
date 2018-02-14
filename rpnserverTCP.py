@@ -13,12 +13,13 @@ operators = {
 
 if __name__ == '__main__':
     host = ''
-    port = 13001
+    port = 8090
 
     while True:
         my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         my_socket.bind((host, port))
         my_socket.listen(1)
+        print("socket is listening")
         connection, addr = my_socket.accept()
         print("Connection From " + str(addr))
 

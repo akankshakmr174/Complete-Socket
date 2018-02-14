@@ -15,7 +15,7 @@ operators = {
 if __name__ == '__main__':
     arguments = sys.argv
     host = ''
-    port = 5002
+    port = 5002 # just a placeholder
     rpn_statement = ''
 
     try:
@@ -36,6 +36,8 @@ if __name__ == '__main__':
 
     # create socket Iv4 TCP AND connect to the host(server)
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    print(host)
+    print(port)
     client_socket.connect((host, port))
 
     # RPN Calculation
